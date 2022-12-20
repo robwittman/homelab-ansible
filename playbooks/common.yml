@@ -4,6 +4,7 @@
   hosts: all
   roles:
     - ansible_motd
+    - cloudalchemy.process_exporter
 
 #
 #- name: node_exporter

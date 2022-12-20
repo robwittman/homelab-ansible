@@ -9,6 +9,7 @@ download:
 haproxy:
 	ansible-playbook -i inventories/hosts.yml playbooks/haproxy.yml -K
 
+common: export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 common:
 	ansible-playbook -i inventories/hosts.yml playbooks/common.yml  -K
 

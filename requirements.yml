@@ -1,6 +1,7 @@
 ---
 roles:
   - name: cloudalchemy.node_exporter
+  - name: cloudalchemy.process_exporter
   - name: ansible_motd
     src: https://github.com/mrlesmithjr/ansible-motd
   - name: ansible_haproxy
