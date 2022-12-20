@@ -1,0 +1,9 @@
+---
+- name: Configure Network Interfaces
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Network Manager
+      ansible.builtin.apt:
+        name: network-manager
+        state: present

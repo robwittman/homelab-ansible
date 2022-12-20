@@ -1,0 +1,78 @@
+---
+- name: Install Kubernetes
+  become: true
+  hosts: kubernetes
+  roles:
+    - geerlingguy.containerd
+    - githubixx.runc
+    - githubixx.cni
+  tasks:
+    - name: Install required tools for Kubernetes
+      apt:
+        name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common']
+        update_cache: true
+        state: present
+
+    - name: Enable modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - overlay
+        - br_netfilter
+
+    - ansible.posix.sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        sysctl_file: /etc/sysctl.d/k8s.conf
+    - ansible.posix.sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: 1
+        sysctl_file: /etc/sysctl.d/k8s.conf
+    - ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        sysctl_file: /etc/sysctl.d/k8s.conf
+        reload: yes
+
+    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+      shell: |
+        swapoff -a
+
+    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+
+    - name: Install Kubernetes apt key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Kubernetes repository
+      apt_repository:
+        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        state: present
+        update_cache: true
+
+    - name: Install Kubernetes tools
+      apt:
+        name: [ 'kubelet', 'kubeadm', 'kubectl', 'open-iscsi' ]
+        update_cache: true
+        state: present
+
+    - name: Prevent kubelet from being upgraded
+      dpkg_selections:
+        name: kubelet
+        selection: hold
+
+    - name: Prevent kubeadm from being upgraded
+      dpkg_selections:
+        name: kubeadm
+        selection: hold
+
+    - name: Prevent kubectl from being upgraded
+      dpkg_selections:
+        name: kubectl
+        selection: hold

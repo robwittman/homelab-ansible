@@ -1,6 +1,0 @@
----
-- name: Install node exporter
-  hosts: all
-  remote_user: root
-  roles:
-    - cloudalchemy.node_exporter

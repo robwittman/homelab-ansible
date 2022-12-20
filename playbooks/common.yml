@@ -1,0 +1,11 @@
+---
+#### MOTD
+- name: MOTD
+  hosts: all
+  roles:
+    - ansible_motd
+
+#
+#- name: node_exporter
+#  roles:
+#    - cloudalchemy.node_exporter

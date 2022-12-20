@@ -1,0 +1,18 @@
+---
+- name: HAProxy
+  hosts: haproxy
+  become: true
+  roles:
+    - role: ansible_haproxy
+      vars:
+        haproxy_frontend_name: cluster
+        haproxy_frontend_bind_address: '*'
+        haproxy_frontend_port: 443
+        haproxy_frontend_mode: 'http'
+        haproxy_backend_servers:
+          - name: thor
+            address: 192.168.1.188:443
+          - name: ares
+            address: 192.168.1.177:443
+          - name: apollo
+            address: 192.168.1.213:443

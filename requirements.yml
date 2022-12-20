@@ -1,0 +1,18 @@
+---
+roles:
+  - name: cloudalchemy.node_exporter
+  - name: ansible_motd
+    src: https://github.com/mrlesmithjr/ansible-motd
+  - name: ansible_haproxy
+    src: https://github.com/tobiasmcnulty/ansible-role-haproxy
+    version: patch-1
+  - name: geerlingguy.containerd
+  - name: githubixx.runc
+  - name: githubixx.cni
+collections:
+  - name: ansible.posix
+    version: 1.4.0
+  - name: community.general
+    version: 5.5.0
+  - name: nginxinc.nginx_core
+    version: 0.7.0
